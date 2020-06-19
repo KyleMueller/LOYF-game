@@ -1,0 +1,179 @@
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body, html {
+font-family: 'PixelOperatorRegular' !important;
+}
+
+.bg {
+  /* The image used */
+background-image: url("images/backgrounds/landscapeSelectScreenTrash.jpg");
+
+/* Full height */
+height: 125%; 
+/* Center and scale the image nicely */
+background-position: center center;
+background-repeat: no-repeat;
+background-size: cover;
+background-attachment: fixed;
+background-color: #57a5ff;
+color: white;
+padding-left: 10%;
+padding-right: 10%;
+padding-top: 5%;
+font-size: 25px;
+}
+
+#cancel {
+  margin-top: 25%;
+  padding-left: 20px;
+  font-size: 25px;
+  padding-right: 20px;
+}
+
+.bg .title {
+  display: inline;
+  position: absolute; 
+  top: 15%;
+  left: 50%;
+  transform: translate(-50% , -50%);
+  font-size: 75px;
+  text-align: center;
+}
+
+.row .heading {
+  display: inline-block;
+}
+
+.controls {
+  margin-top: 100px;
+}
+
+/* Landscape iPhone X, 6+, 7+, 8+*/
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 812px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: landscape) {
+
+    .bg {
+      min-height: 205%;
+      min-width: 205%;
+    }
+
+    #cancel {
+      margin-top: 12%;
+    }
+
+    .row .title {
+      left: 85%;
+      white-space: nowrap;
+    }
+
+    .controls {
+      margin-top: 15px;
+    }
+
+    /* ul {
+      display: inline-block;
+      float: left;
+    } */
+
+    .row .heading {
+      font-size: 35px !important;
+    }
+  
+    .row .subHeading {
+      font-size: 30px;
+    }
+    
+    .row ul li {
+      font-size: 28px;
+    }
+
+  }
+
+/* Portrait iPhone X, 6+. 7+, 8+*/
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 812px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: portrait) { 
+
+    .bg {
+      background-image: url("images/backgrounds/portraitSelectScreenTrash.png");
+    }
+
+    .bg .title {
+      font-size: 75px !important;
+    }
+
+  }
+
+  
+/* iPhone X and Xs Max Portrait*/
+@media only screen 
+and (min-device-width: 375px) 
+and (min-device-height: 812px) 
+and (-webkit-device-pixel-ratio: 3)
+and (orientation: portrait) { 
+  .bg {
+    height: 100% !important;
+  }
+}
+
+/* iPhone XR */
+@media only screen 
+    and (min-device-width: 414px) 
+    and (min-device-height: 896px) 
+    and (-webkit-device-pixel-ratio: 2) 
+    and (orientation: portrait) { 
+      .bg {
+        height: 100% !important;
+      }
+}
+
+  /* Landscape iPhone 6, 7, 8*/
+  @media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 667px) 
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: landscape) {
+
+    .bg .title {
+      font-size: 50px !important;
+    }
+    
+  }
+
+  /* Portrait iPhone 6, 7, 8*/
+@media only screen 
+and (min-device-width: 375px) 
+and (max-device-width: 667px) 
+and (-webkit-min-device-pixel-ratio: 2)
+and (orientation: portrait) {
+
+  .bg {
+    background-image: url("images/backgrounds/portraitSelectScreenTrash.png");
+    height: 120%;
+  }
+
+  .bg .title {
+    top: 7.5%;
+  }
+
+  .row .heading {
+    font-size: 45px !important;
+  }
+
+  .row .subHeading {
+    font-size: 40px;
+  }
+  
+  .row ul li {
+    font-size: 35px;
+  }
+}
+

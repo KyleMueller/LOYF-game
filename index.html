@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/pixel-operator" type="text/css"/>
+
+        <title>Leave Only Your Footprint: Ocean Cleanup</title>
+    </head>
+    <body>
+
+        <div class="bg">
+            <div class="menu">
+                <img class="logo" src="images/menuItems/LOYFlogo.png">
+                <p class="presents">PRESENTS</p>
+                <img class="cleanUp" src="images/menuItems/OClogo.png">
+
+                <button id="start" class="btn btn-success">Start</button>
+
+            </div>
+            <div class="gif">
+                <p class="turnMessage">Please Turn Your Device  Sideways for the <br> Best <strong>EXPERIENCE</strong> Possible</p>
+                <img class="landscape" src="images/menuItems/turnSidewaysGif.gif">
+            </div>
+
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+        <script>
+            //HTML,CSS,andJS by Kyle Mueller and Tim Van Cauwenberge, COVID QUARINTINE 2020
+
+            const startButton = document.getElementById("start")
+            startButton.addEventListener("click", (event) => { myRedirect() })
+            function myRedirect() {
+                // gets location of the current folder and taks on the next html
+                var A = document.location.pathname
+                var b = A.search("index.html")
+                document.location = A.substring(0, b) + "HTML2.html"
+            }
+            //inital values for session items
+            sessionStorage.setItem("hiscore", "0") //hiscore for only level 6 alert implimentation
+            sessionStorage.setItem("myScore1", "0")
+            sessionStorage.setItem("myScore2", "0")
+            sessionStorage.setItem("myScore3", "0")
+            sessionStorage.setItem("myScore4", "0")
+            sessionStorage.setItem("myScore5", "0")
+            sessionStorage.setItem("myScore6", "0")
+
+
+            sessionStorage.setItem("character2unlocked", "false")
+            sessionStorage.setItem("character3unlocked", "false")
+            sessionStorage.setItem("character4unlocked", "false")
+            sessionStorage.setItem("character5unlocked", "false")
+            sessionStorage.setItem("character6unlocked", "false")
+
+            sessionStorage.setItem("level1cleared", "false")
+            sessionStorage.setItem("level2cleared", "false")
+            sessionStorage.setItem("level3cleared", "false")
+            sessionStorage.setItem("level4cleared", "false")
+            sessionStorage.setItem("level5cleared", "false")
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="HTML3.css">
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/pixel-operator" type="text/css" />
+
+    <title>Leave Only Your Footprint: Ocean Cleanup</title>
+</head>
+<body>
+
+    <div class="bg">
+
+        <div class="row">
+            <div class="cancel">
+                <button id="cancel" class="btn btn-danger">BACK</button>
+            </div>
+            <div class="leaderboard">
+                <button id="leaderboard" class="btn btn-success">LEADERBOARD</button>
+            </div>
+            <h1 class="select">LEVEL SELECT</h1>
+
+        </div>
+        <div class="lvlSection container">
+            <div class="lvlRow row">
+                <div class="col-6">
+                    <button class="lvlBtn btn-block" id="button1">
+                        <img class="lvlImg" id="level1" src="images/menuItems/lvl1.png">
+                    </button>
+                </div>
+
+                <div class="col-6">
+                    <button class="btn-block lvlBtn" id="button2">
+                        <img class="lvlImg" id="level2" src="images/menuItems/lvl2.png">
+                    </button>
+                </div>
+            </div>
+
+            <div class="lvlRow row">
+                <div class="col-6">
+                    <button class="lvlBtn btn-block" id="button3">
+                        <img class="lvlImg" id="level3" src="images/menuItems/lvl3.png">
+                    </button>
+                </div>
+
+                <div class="col-6">
+                    <button class="btn-block lvlBtn" id="button4">
+                        <img class="lvlImg" id="level4" src="images/menuItems/lvl4.png">
+                    </button>
+                </div>
+            </div>
+
+            <div class="lvlRow row">
+                <div class="col-6">
+                    <button class="lvlBtn btn-block" id="button5">
+                        <img class="lvlImg" id="level5" src="images/menuItems/lvl5.png">
+                    </button>
+                </div>
+
+                <div class="col-6">
+                    <button class="btn-block lvlBtn" id="button6">
+                        <img class="lvlImg" id="level6" src="images/menuItems/lvl6.png">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <script>
+        //HTML,CSS,andJS by Kyle Mueller and Tim Van Cauwenberge, COVID QUARINTINE 2020
+
+        //button const by ids
+        const cancelButton = document.getElementById("cancel")
+        const leaderboardButton = document.getElementById("leaderboard")
+        const button1 = document.getElementById("button1")
+        const button2 = document.getElementById("button2")
+        const button3 = document.getElementById("button3")
+        const button4 = document.getElementById("button4")
+        const button5 = document.getElementById("button5")
+        const button6 = document.getElementById("button6")
+
+        //button's image const by ids
+        const image1 = document.getElementById("level1")
+        const image2 = document.getElementById("level2")
+        const image3 = document.getElementById("level3")
+        const image4 = document.getElementById("level4")
+        const image5 = document.getElementById("level5")
+        const image6 = document.getElementById("level6")
+
+        //buttons will need code to store level selected in storage
+        leaderboardButton.addEventListener("click", (event) => { myRedirect("hiscore.html")})
+        cancelButton.addEventListener("click", (event) => { myRedirect("HTML2.html") })
+        button1.addEventListener("click", (event) => { myRedirect("HTML4.html"); sessionStorage.setItem("playingLevel", "1") })
+        button2.addEventListener("click", (event) => { myRedirect("HTML4.html"); sessionStorage.setItem("playingLevel", "2") })
+        button3.addEventListener("click", (event) => { myRedirect("HTML4.html"); sessionStorage.setItem("playingLevel", "3") })
+        button4.addEventListener("click", (event) => { myRedirect("HTML4.html"); sessionStorage.setItem("playingLevel", "4") })
+        button5.addEventListener("click", (event) => { myRedirect("HTML4.html"); sessionStorage.setItem("playingLevel", "5") })
+        button6.addEventListener("click", (event) => { myRedirect("HTML4.html"); sessionStorage.setItem("playingLevel", "6") })
+
+        function myRedirect(nextHTML) {
+            // gets location of the current folder and taks on the next html
+            var A = document.location.pathname
+            var b = A.search("HTML3.html")
+            document.location = A.substring(0, b) + nextHTML
+        }
+
+        function updateLevelUnlocks() {
+            if (sessionStorage.getItem("level1cleared") === "false") {
+                image2.src = "images/menuItems/lvllocked.png"
+                button2.disabled = true
+            }
+            if (sessionStorage.getItem("level2cleared") === "false") {
+                image3.src = "images/menuItems/lvllocked.png"
+                button3.disabled = true
+            }
+            if (sessionStorage.getItem("level3cleared") === "false") {
+                image4.src = "images/menuItems/lvllocked.png"
+                button4.disabled = true
+            }
+            if (sessionStorage.getItem("level4cleared") === "false") {
+                image5.src = "images/menuItems/lvllocked.png"
+                button5.disabled = true
+            }
+            if (sessionStorage.getItem("level5cleared") === "false") {
+                image6.src = "images/menuItems/lvllocked.png"
+                button6.disabled = true
+            }
+        }
+
+
+        updateLevelUnlocks()
+    </script>
+</body>
+</html>

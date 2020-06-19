@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="hiscore.css">
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/pixel-operator" type="text/css" />
+
+    <title>Leave Only Your Footprint: Ocean Cleanup</title>
+  </head>
+
+  <body>
+
+    <div class="bg">
+        <div class="row">
+            <div class="cancel">
+                <button id="cancel" class="btn btn-danger">BACK</button>
+            </div>
+            <div class="subScore">
+                <button id="subScore" class="btn btn-success">Submit Your Score</button>
+            </div>
+            <h1 class="title">LEADERBOARD</h1>
+        </div>
+
+        <div class="container leaderboardDisplay">
+            <div class="row">
+                <div class="name" id="top1">Player1</div><div class="score" id="score1">430</div>
+            </div>
+            
+            <div class="row">
+                <div class="name" id="top2">Player2</div><div class="score" id="score2">580</div>
+            </div>
+            
+            <div class="row">
+                <div class="name" id="top3">Player3</div><div class="score" id="score3">310</div>
+            </div>
+            
+            <div class="row">
+                <div class="name" id="top4">Player4</div><div class="score" id="score4">640</div>
+            </div>
+            
+            <div class="row">
+                <div class="name" id="top5">Player5</div><div class="score" id="score5">495</div>
+            </div>
+
+            <div class="row">
+                <div class="name" id="top6">Player6</div><div class="score" id="score6">430</div>
+            </div>
+            
+            <div class="row">
+                <div class="name" id="top7">Player7</div><div class="score" id="score7">580</div>
+            </div>
+            
+            <div class="row">
+                <div class="name" id="top8">Player8</div><div class="score" id="score8">310</div>
+            </div>
+            
+            <div class="row">
+                <div class="name" id="top9">Player9</div><div class="score" id="score9">640</div>
+            </div>
+            
+            <div class="row">
+                <div class="name" id="top10">Player10</div><div class="score" id="score10">495</div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+      <!-- script for aws sdk-->
+      <script src="https://sdk.amazonaws.com/js/aws-sdk-2.668.0.min.js"></script>
+
+      <script>
+
+          const cancelButton = document.getElementById("cancel")
+          cancelButton.addEventListener("click", (event) => { myRedirect("HTML3.html") })
+
+          function myRedirect(nextHTML) {
+              // gets location of the current folder and taks on the next html
+              if (hiscoreSubFlag) {
+                  var A = document.location.pathname
+                  var b = A.search("hiscore.html")
+                  document.location = A.substring(0, b) + nextHTML
+              }
+              else {
+                  if (confirm("You have not submitted a hiscore, are you sure you want to leave?")) {
+                      hiscoreSubFlag = true
+                      myRedirect("HTML3.html")
+                  }
+              }
+          }
+
+
+          const submitButton = document.getElementById('subScore') //add later
+          submitButton.addEventListener("click", (event) => { askIfReady() })
+
+          const backButton = document.getElementById('cancel') //add later
+          submitButton.addEventListener("click", (event) => { myRedirect("HTML3.html") }) //determine which html
+
+          var hiscoreSubFlag = false //set to true when a score has been submitted
+
+
+          AWS.config.region = 'us-east-1'; // Region
+          AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+              IdentityPoolId: 'us-east-1:260934c4-f9d2-4519-8e24-87b5e406e5f3',
+          });
+         
+          var dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'})
+          /** 
+          var params = {
+              TableName: 'gameHiscores',
+              Item: {
+                  PK: { S: "testPK"},
+                  Score: { N: "1"},
+                  Date: { S: "5-24-2020"},
+                  Name: { S:"testName"}
+              }
+          }
+          dynamodb.putItem(params, function (err, data) {
+              if (err) {
+                  console.log("Error", err);
+              } else {
+                  console.log("Success", data);
+              }
+          });
+          */
+
+          //testing purposes remove later
+          //sessionStorage.setItem("myScore1", "1")
+          //sessionStorage.setItem("myScore2", "2")
+          //sessionStorage.setItem("myScore3", "3")
+          //sessionStorage.setItem("myScore4", "4")
+          //sessionStorage.setItem("myScore5", "5")
+          //sessionStorage.setItem("myScore6", "6")
+
+          function askIfReady() { //this will go on the button
+              var a = parseInt(sessionStorage.getItem("myScore1"))
+              var b = parseInt(sessionStorage.getItem("myScore2"))
+              var c = parseInt(sessionStorage.getItem("myScore3"))
+              var d = parseInt(sessionStorage.getItem("myScore4"))
+              var e = parseInt(sessionStorage.getItem("myScore5"))
+              var f = parseInt(sessionStorage.getItem("myScore6"))
+              var totes = a + b + c + d + e + f
+
+              alert("Your hiscores for each level are:\nLevel 1: " + a + "\nLevel 2: " + b + "\nLevel 3: " + c + "\nLevel 4: " + d + "\nLevel 5: " + e
+                  + "\nLevel 6: " + f + "\n\nTotal Score: " + totes)
+
+              if (confirm("Would you like to submit your hiscore of: " + totes + "?")) {
+                  submitHiscore()
+              }
+
+          }
+          
+          function submitHiscore() {
+              var name = prompt("Please enter your name:")
+              var totalScore = parseInt(sessionStorage.getItem("myScore1")) + parseInt(sessionStorage.getItem("myScore2")) + parseInt(sessionStorage.getItem("myScore3")) +
+              parseInt(sessionStorage.getItem("myScore4")) + parseInt(sessionStorage.getItem("myScore5")) + parseInt(sessionStorage.getItem("myScore6"))
+              var today = new Date()
+              var dd = String(today.getDate()).padStart(2, '0');
+              var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+              var yyyy = today.getFullYear();
+
+              today = mm + '/' + dd + '/' + yyyy;
+              
+              if (name == null || name == "") {
+                  alert("No name entered. Hiscore not recorded")
+              }
+              else {
+                  hiscoreSubFlag = true
+                  const partKey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) //random string for identifier
+                  var paramSend = {
+                      TableName: 'gameHiscores',
+                      Item: {
+                          PK: { S: partKey },
+                          Score: { N: totalScore.toString() },
+                          Date: { S: today },
+                          Name: { S: name },
+                          LVL1: { S: sessionStorage.getItem("myScore1") },
+                          LVL2: { S: sessionStorage.getItem("myScore2") },
+                          LVL3: { S: sessionStorage.getItem("myScore3") },
+                          LVL4: { S: sessionStorage.getItem("myScore4") },
+                          LVL5: { S: sessionStorage.getItem("myScore5") },
+                          LVL6: { S: sessionStorage.getItem("myScore6") }
+                      }
+                  }
+                  dynamodb.putItem(paramSend, function (err, data) {
+                      if (err) {
+                          console.log("Error", err);
+                      } else {
+                          console.log("Success", data);
+                      }
+                  });
+              }
+          }
+
+
+          var scores = []
+          var names = []
+          var params = {
+              TableName: "gameHiscores",
+              Select: "ALL_ATTRIBUTES"
+              
+          };
+
+          dynamodb.scan(params, function (err, data) {
+              if (err) {
+                  console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+              } else {
+                  console.log("Query succeeded.");
+                  var p = 0
+                  data.Items.forEach(function (item) {
+                      
+                      scores[p] = item['Score'].N
+                      names[p] = item['Name'].S
+                      p = p + 1
+
+                  });
+                  
+                  findTopTen()
+              }
+          });
+
+
+          
+          
+          function findTopTen() {
+              for (let i = 1; i <= 10; i++) {
+                  console.log(scores)
+                  var a = 0
+                  var bestIndex = 0
+                  for (let j = 0; j < scores.length; j++) {
+                      if (parseInt(scores[j]) > a) {
+                          a = scores[j]
+                          bestIndex = j
+                      }
+                  }
+
+                  
+                  if (i == 1) {
+                      document.getElementById('top1').textContent = names[bestIndex]
+                      document.getElementById('score1').textContent = scores[bestIndex]
+                  }
+                  else if (i == 2) {
+                      document.getElementById('top2').textContent = names[bestIndex]
+                      document.getElementById('score2').textContent = scores[bestIndex]
+                  }
+                  else if (i == 3) {
+                      document.getElementById('top3').textContent = names[bestIndex]
+                      document.getElementById('score3').textContent = scores[bestIndex]
+                  }
+                  else if (i == 4) {
+                      document.getElementById('top4').textContent = names[bestIndex]
+                      document.getElementById('score4').textContent = scores[bestIndex]
+                  }
+                  else if (i == 5) {
+                      document.getElementById('top5').textContent = names[bestIndex]
+                      document.getElementById('score5').textContent = scores[bestIndex]
+                  }
+                  else if (i == 6) {
+                      document.getElementById('top6').textContent = names[bestIndex]
+                      document.getElementById('score6').textContent = scores[bestIndex]
+                  }
+                  else if (i == 7) {
+                      document.getElementById('top7').textContent = names[bestIndex]
+                      document.getElementById('score7').textContent = scores[bestIndex]
+                  }
+                  else if (i == 8) {
+                      document.getElementById('top8').textContent = names[bestIndex]
+                      document.getElementById('score8').textContent = scores[bestIndex]
+                  }
+                  else if (i == 9) {
+                      document.getElementById('top9').textContent = names[bestIndex]
+                      document.getElementById('score9').textContent = scores[bestIndex]
+                  }
+                  else if (i == 10) {
+                      document.getElementById('top10').textContent = names[bestIndex]
+                      document.getElementById('score10').textContent = scores[bestIndex]
+                  }
+                  names[bestIndex] = "used"
+                  scores[bestIndex] = 0
+
+                  
+
+              }
+          }
+          
+      </script>
+
+  </body>
+</html>

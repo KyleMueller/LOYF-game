@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" type="text/css" href="help.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/pixel-operator" type="text/css"/>
+
+        <title>Leave Only Your Footprint: Ocean Cleanup</title>
+  </head>
+
+  <body>
+
+    <div class="bg">
+      <div class="row">
+        <div class="cancel">
+          <button id="cancel" class="btn btn-danger">BACK</button>
+      </div>
+        <h1 class="title">Ocean Cleanup Game</h1>
+      </div>
+
+      <div class="row controls">
+        <h2 class="heading"><strong>Controls:</strong></h2>
+        <ul>
+          <li class="subHeading">Mobile and Touch Screens</li>
+          <ul>
+            <li> <strong>IMPORTANT</strong> - If you are using Safari, please scroll down during gameplay to hide the address bar.</li>
+
+            <li>Make sure you turn your device horizontally</li>
+
+            <li>Buttons for ‘Up’, ‘Down’, and ‘Fire’ will appear at the bottom right corner and bottom middle of the screen. Press these accordingly for your desired actions.</li>
+
+          <li>The ‘Back’ button is on the top middle should you desire to return to the level select screen.</li>
+          </ul>
+        </ul>
+
+        <ul>
+          <li class="subHeading">Computer</li>
+          <ul>
+            <li>The touch enabled buttons (‘Up’, ‘Down’, ‘Fire’, ‘Back’) remain on screen if your computer uses touch screens.</li>
+
+            <li>The up and down arrow keys correlate to ‘Up’ and ‘Down’, respectively, as well as the spacebar to ‘Fire.’</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div class="row">
+        <h2 class="heading"><strong>Gameplay:</strong></h2>
+        <ul>
+          <li class="subHeading">Objectives</li>
+          <ul>
+            <li>In levels 1 through 5, you are playing as your predetermined sea critter who aims to defeat litter in their environment. You want to dodge and destroy enough trash before finding another sea critter friend trapped by the trash. By hitting the trash that strangles your sea critter friend, you free them and have them as a playable character. Furthermore, you unlock the next level.</li>
+
+            <li>Level 6 is a special level that has no boss. It is an endless level that gets exponentially more difficult the more time you spend in the level. Your goal is to defeat as much trash as possible and score the highest score you can!</li>
+
+            <li>Have fun! And remember to defeat the trash in real life as you will in our virtual environment!</li>
+          </ul>
+        </ul>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <script>
+      const cancelButton = document.getElementById("cancel")
+
+      cancelButton.addEventListener("click", (event) => { myRedirect("HTML2.html") })
+      
+      function myRedirect(nextHTML) {
+            // gets location of the current folder and taks on the next html
+            var A = document.location.pathname
+            var b = A.search("help.html")
+            document.location = A.substring(0, b) + nextHTML
+        }
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,942 @@
+﻿<!DOCTYPE html>
+<html>
+<head class="notSelectable">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <!----
+      <link rel="stylesheet" href="style.css">
+      -->
+    <title>Leave Only Your Footprint: Ocean Cleanup</title>
+    <style>
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        .bg {
+            /* The image used */
+            background-image: url("images/backgrounds/landscapeSelectScreen.png");
+            /* Full height */
+            /* min-height: 100vh; */
+            height: 100%;
+            width:100%;
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            
+        }
+
+        Button {
+            touch-action: manipulation;
+            position: fixed;
+            font-size: 3.5vw;
+            padding: 0px;
+            border-radius: 0px;
+            margin: 0px;
+            background-color: rgba(255,255,255,0.4);
+            z-index: 1000;
+        }
+
+            /* BUG  FIXING FOR DISABLING HIGHLIGHT START */
+            /* -webkit-user-select:none; 
+            -webkit-touch-callout:none; 
+             -moz-user-select:none; 
+             -ms-user-select:none; 
+             user-select:none; 
+        }
+
+        Button::selection {
+            color: none;
+            background: none;
+        }
+
+        Button:focus {
+            outline: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        } */
+        /* BUG  FIXING FOR DISABLING HIGHLIGHT END */
+
+        #container {
+            height: 100%;
+        }
+        /*Z positions for objects*/
+
+    </style>
+</head>
+<body class="notSelectable">
+    <div class="notSelectable bg" id="backG">
+        <div class="notSelectable" id="container">
+            <b class="notSelectable" id="scoreLabel" style="position: fixed; font-size: 3.5vw; color: white;
+                    height: auto; width: 20%; top: 0%; left: 5%;">Score: 0</b>
+            <b class="notSelectable" id="bossHealth" style="position: fixed; font-size: 3.5vw; color: red;
+                    height: auto; width: 30%; top: 0%; left: 70%;">Boss Health: 100/100</b>
+            <button class="notSelectable" id="back" style="height:auto; width:10%; top:0%; left:45%">BACK</button>
+            <button class="notSelectable" id="fire" style="height:20%; width:20%; top:80%; left:40%">FIRE!</button>
+            <button class="notSelectable" id="moveUP" style="height:40%; width:10%; top:20%; left:90%">↑</button>
+            <button class="notSelectable" id="moveDown" style="height:40%; width:10%; top:60%; left:90%">↓</button>
+            <button id="gameStart" style="height:20%; width:20%; top: 40%; left:40%">Loading...</button>
+            <img class="notSelectable" id="myCharacter" style="width: 5%; height:10%; position:fixed; top:45%;
+                left:0%;" src="images/animals/octopus-2.png" />
+
+        </div>
+    </div>
+    <script>
+        //HTML,CSS,andJS by Kyle Mueller and Tim Van Cauwenberge, COVID QUARINTINE 2020
+
+
+
+//         window.addEventListener("load",function() {
+//     setTimeout(function(){
+//         // This hides the address bar:
+//         window.scrollTo(0, 1);
+//     }, 0);
+// });
+ 
+        //buttons
+        const backButton = document.getElementById("back")
+        const fireButton = document.getElementById("fire")
+        const UpButton = document.getElementById("moveUP")
+        const DownButton = document.getElementById("moveDown")
+        const startButton = document.getElementById("gameStart")
+
+        //character stoof
+        var desiredHeight = 45
+        var theCharacter = document.getElementById("myCharacter")
+
+        //labels
+        const scoreLabel = document.getElementById("scoreLabel")
+        const health = document.getElementById("bossHealth")
+
+        //event listeners
+        backButton.addEventListener("click", (event) => { backButtonCheck() })
+        UpButton.addEventListener("click", (event) => { moveCharUp() })
+        DownButton.addEventListener("click", (event) => { moveCharDown() })
+        fireButton.addEventListener("click", (event) => { fireLaser() })
+        startButton.addEventListener("click", (event) => { startTheGame() })
+        window.addEventListener("keydown", keyControls)
+
+        //trash monsters: monsters of the trash kind
+        myMonsters = []
+        monstersMaxLevel = 3 //set by local data when we have it
+        var score = 0
+
+
+        //monster hit limit (set by level)
+        var totalMonsters = 0               //count of total monsters
+        var monstersKilled = 0              //1 hit monsters killed
+        var monstersBeforeBoss = 10         //1 hit monsters killed before the boss spawns
+        var bossSpawned = false             //boolean for if the boss has spawned (used for laser collision)
+        var bossHealth = 100                //boss's health
+        var bossStartHealth = 100           //boss's health at the start of the level (needed for comparison)
+        var monsterLimit = 200              //arbitary limit to prevent too many monsters on the screen
+        var currentLevel = 0                //details the current game level, 1-6
+        var angleMechs = false              //if the angle mechanics of the enemy are in play (level dependent)
+        var bossMovement = false            //if the boss moves up and down (not programmed in yet, levels 3+)
+        var monsterSpawnInterval = 5000     //interval between the spawns of each monster (higher level, lower this value)
+        var bossSRCs = []                   //the four SRCS that make up the boss sprites
+        var monsterSpeed = 100              //rate at which each monster is moved 1% the screen (lower the higher the level)
+
+        function startTheWave() {
+            var aHHHHmOnStErs = setInterval(monInt, monsterSpawnInterval) //5000ms = 5sceons
+            function monInt() {
+                makeMonsters()
+                totalMonsters++
+                if (totalMonsters == monsterLimit) {
+                    clearInterval(aHHHHmOnStErs)
+                    //start Boss sequence
+                }
+                if (bossSpawned == false) {
+                    if (monstersKilled >= monstersBeforeBoss) {
+                        bossSpawned = true
+                        spawnBoss()
+                    }
+                }
+            }
+        }
+        function myRedirect(nextHTML) {
+            // gets location of the current folder and taks on the next html
+            var A = document.location.pathname
+            var b = A.search("HTML4.html")
+            document.location = A.substring(0, b) + nextHTML
+        }
+        function getCharHeight() {
+            //returns the percent height of the character without the '%'
+            var A = theCharacter.style.top
+            return parseInt(A.substring(0, A.length))
+        }
+        //char up and down, change desired height on button presses
+        //keep desired height within bounds
+        function moveCharUp() {
+            if (desiredHeight - 7 >= 0) {
+                desiredHeight = desiredHeight - 7
+            }
+            else {
+                desiredHeight = 0
+            }
+            doIMove()
+        }
+        function moveCharDown() {
+            if (desiredHeight + 7 <= 90) {
+                desiredHeight = desiredHeight + 7
+            }
+            else {
+                desiredHeight = 90
+            }
+            doIMove()
+        }
+        function keyControls(event) { //keyboard controls
+            if (event.key === "ArrowUp") {
+                moveCharUp()
+            }
+            else if (event.key === "ArrowDown") {
+                moveCharDown()
+            }
+            else if (event.key === " ") {
+                fireLaser()
+            }
+        }
+        function backButtonCheck() {
+            if (confirm("Are you sure you want to let the trash win?")) {
+                myRedirect("HTML3.html")
+            }
+        }
+
+        //frame method - get ready for everything to break!
+        var iMoveNow = false //flag value, hopefully prevents breaking
+        function doIMove() {
+            if (iMoveNow == false) {
+                iMoveNow == true
+                var id = setInterval(frame, 100) //100ms = tenth of a second
+                function frame() {
+                    if (getCharHeight() > desiredHeight) {
+                        //not sure why, by can't be decimal points added on
+                        //all hell breaks loose if it's .5%
+                        //probably has to do with floating point rounding errors
+                        theCharacter.style.top = ((getCharHeight() - 1) + "%")
+                    }
+                    else if (getCharHeight() < desiredHeight) {
+                        theCharacter.style.top = ((getCharHeight() + 1) + "%")
+                    }
+                    else if (getCharHeight() == desiredHeight) {
+                        clearInterval(id)
+                        iMoveNow == false
+                    }
+
+                }
+            }
+        }
+        var laserReady = true
+        function fireLaser() { //func connectin fire button
+            if (laserReady == true) {
+                playFireSound()
+                laserReady = false
+                let laser = createLaserElement()
+                document.getElementById('container').appendChild(laser)
+                moveLaser(laser)
+                setTimeout(prepareLaser, 250) //stops the spamming of the laser to every quarter of a second
+                //really only useful agaisnt computer players
+                //makes game harder
+            }
+        }
+        function prepareLaser() {
+            laserReady = true
+        }
+        function createLaserElement() { // makes laser
+            //gets character height and sets rest of attributes
+            let yPos = getCharHeight() + 2
+            let xPos = 5
+            let newLaser = document.createElement('img')
+            newLaser.src = 'images/SwordAttack-6.png'
+
+            newLaser.style.height = '5%'
+            newLaser.style.width = '5%'
+            newLaser.style.position = 'fixed'
+            newLaser.style.top = yPos + '%'
+            newLaser.style.left = xPos + '%'
+            return newLaser
+        }
+        var allowLasersMove = true
+        function moveLaser(laser) {
+            //sets interval for moving of laser, and some type checking
+            var laserInterval = setInterval(laserFrame, 80) //ask me why i hate my life
+            let xPercent = laser.style.left
+            var a = xPercent.search('%')
+            var xNoPercent = xPercent.substring(0, a)
+            function laserFrame() {
+                if (allowLasersMove == true) {
+                    //get all Trash
+                    //check collision with trash
+                    if (parseInt(xNoPercent) <= 99) {
+                        xNoPercent = parseInt(xNoPercent) + 1
+                        xPercent = xNoPercent + '%'
+                        laser.style.left = xPercent
+                    }
+                    else {
+                        laser.remove()
+                        clearInterval(laserInterval)
+                    }
+                    for (let i = 0; i < myMonsters.length; i++) {
+                        if (checkLaserCollision(laser, myMonsters[i])) {
+                            score = score + 10
+                            updateScore()
+                            let newX = myMonsters[i].style.left
+                            let newY = myMonsters[i].style.top
+                            if (myMonsters[i].id === "2 hit") {
+                                playTrash2()
+                                let newMon = createMonsterElement(1)
+                                newMon.style.left = newX
+                                newMon.style.top = newY
+                                newMon.src = myMonsters[i].src
+                                document.getElementById('container').appendChild(newMon)
+                                myMonsters.push(newMon)
+
+                                //requires removal of the laser, then the break statement
+                                //otherwise the last element of the array is the new monster
+                                //and the new monster would be deleted on the same frame it is created
+                                laser.remove()
+                                myMonsters[i].remove()
+                                delete myMonsters[i]
+                                myMonsters = myMonsters.filter(function (x) { return x !== undefined })
+                                clearInterval(laserInterval)
+                                break
+                            }
+                            else if (myMonsters[i].id === "3 hit") {
+                                playTrash2()
+                                let newMon = createMonsterElement(2)
+                                newMon.style.left = newX
+                                newMon.style.top = newY
+                                newMon.src = myMonsters[i].src
+                                document.getElementById('container').appendChild(newMon)
+                                myMonsters.push(newMon)
+
+                                laser.remove()
+                                myMonsters[i].remove()
+                                delete myMonsters[i]
+                                myMonsters = myMonsters.filter(function (x) { return x !== undefined })
+                                clearInterval(laserInterval)
+                                break
+                            }
+                            else {
+                                playTrash1()
+                            }
+                            monstersKilled = monstersKilled + 1
+                            laser.remove()
+                            myMonsters[i].remove()
+                            delete myMonsters[i]
+                            myMonsters = myMonsters.filter(function (x) { return x !== undefined })
+                            clearInterval(laserInterval)
+                        }
+                    }
+                    if (bossSpawned == true) {
+                        if (parseInt(xNoPercent) >= 80) {
+                            let y = parseInt(laser.style.top.substring(0, laser.style.top.length)) - 2 //y with no '%', -2 percent for visual adjustment
+                            if (difference(y, getBossHeight()) <= 5) {
+                                playTrash2()
+                                bossHealth = bossHealth - 1
+                                updateHealth()
+                                score = score + 1
+                                updateScore()
+                                if (bossHealth < 1) {
+                                    getReadyToWin()
+                                }
+                                laser.remove()
+                                clearInterval(laserInterval)
+                            }
+                        }
+                    }
+                }
+
+            }
+
+        }
+        //next steps
+        //getting all images for the use of trash,
+        //rng to pick one, creates it
+        //moves it, add collision detection to laser
+        //add collision detection to player
+
+        //monster stuff
+        var allowMonstersMade = true
+        function makeMonsters() {
+            //randomize monster levels with x
+            if (allowMonstersMade == true) {
+                let x = getRandomInt(monstersMaxLevel) + 1
+                let mon = createMonsterElement(x)
+                document.getElementById('container').appendChild(mon)
+                myMonsters.push(mon)
+            }
+        }
+        function createMonsterElement(x) { // x = number of desired hits
+            var monsterKind = 'asd'
+            var hitID = x
+            if (x == 1) {
+                var monSelect = getRandomInt(2) + 1
+                if (monSelect == 1) {
+                    monsterKind = 'straw'
+                }
+                else {
+                    monsterKind = 'soda'
+                }
+            }
+            //2 hit
+            else if (x == 2) {
+                var monSelect = getRandomInt(3) + 1
+                if (monSelect == 1) {
+                    monsterKind = 'water bottle'
+                }
+                else if (monSelect == 2) {
+                    monsterKind = 'plastic bag'
+                }
+                else {
+                    monsterKind = 'Trishs makeup'
+                }
+            }
+            //3 hit
+            else {
+                var monSelect = getRandomInt(2) + 1
+                if (monSelect == 1) {
+                    monsterKind = 'TV'
+                }
+                else {
+                    monsterKind = 'Tire'
+                }
+            }
+            let newMon = document.createElement('img')
+            if (monsterKind === 'straw') { newMon.src = 'images/trash/Straw-4.png' }
+            else if (monsterKind === 'soda') { newMon.src = 'images/trash/Soda Can-1.png' }
+            else if (monsterKind === 'water bottle') { newMon.src = 'images/trash/Water Bottle-1.png' }
+            else if (monsterKind === 'plastic bag') { newMon.src = 'images/trash/Plastic Bag-1.png' }
+            else if (monsterKind === 'Trishs makeup') { newMon.src = 'images/trash/Mac Eyeshadow-1.png' }
+            else if (monsterKind === 'TV') { newMon.src = 'images/trash/TV-1.png' }
+            else if (monsterKind === 'Tire') { newMon.src = 'images/trash/Tire-4.png' }
+            newMon.style.height = '10%'
+            newMon.style.width = '5%'
+            newMon.style.position = 'fixed'
+            newMon.style.left = '99%'
+            newMon.style.top = (getRandomInt(91)) + '%'
+            newMon.id = hitID + ' hit'
+            return newMon
+        }
+        //Math functions because javascript needs to be more like java
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max))
+        }
+        function difference(a, b) {
+            return Math.abs(a - b);
+        }
+        var allowMonstertoMove = true
+        function moveMonsters() {
+            var monsterMoveInterval = setInterval(monsFrame, monsterSpeed) //100 is speed, change to variable for increase difficulity
+            function monsFrame() {
+                if (allowMonstertoMove == true) {
+                    for (let i = 0; i < myMonsters.length; i++) {
+                        if (myMonsters[i].style.left === '0%') { //wrap around mechanics
+                            var a = parseInt(myMonsters[i].style.left.substring(0, myMonsters[i].style.left.length))
+                            a = a - 1
+                            if (a <= 1) {
+                                let charY = parseInt(getCharHeight())
+                                let monY = parseInt(myMonsters[i].style.top)
+                                if (difference(charY, monY) <= 5) {
+                                    gameOver()
+                                }
+
+                            }
+                            myMonsters[i].style.left = '99%'
+                        }
+                        else {
+                            //a = current left position, no %
+                            var a = parseInt(myMonsters[i].style.left.substring(0, myMonsters[i].style.left.length))
+                            a = a - 1
+                            myMonsters[i].style.left = a + '%'
+                            //monster and character collision
+                            if (a <= 1) {
+                                let charY = parseInt(getCharHeight())
+                                let monY = parseInt(myMonsters[i].style.top)
+                                if (difference(charY, monY) <= 5) {
+                                    gameOver()
+                                }
+
+                            }
+                            if (angleMechs == true) {
+                                if (a % 6 == 0) {
+                                    let y = parseInt(myMonsters[i].style.top.substring(0, myMonsters[i].style.top.length))
+                                    y = y + 1
+                                    if (y >= 97) {
+                                        y = 0 //wrap around mechanics
+                                    }
+                                    myMonsters[i].style.top = y + '%' //Kyle is a very evil boy
+                                }
+                            }
+                        }
+                    }
+                    if (currentLevel == 6) {
+                        if (getRandomInt(90) == 37) { //1% chance every frame they get faster
+                            if (monsterSpeed >= 13) {
+                                monsterSpeed = monsterSpeed - 3
+                            }
+                            else {
+                                monsterSpeed = 10
+                            }
+                            clearInterval(monsterMoveInterval)
+                            moveMonsters()
+                        }
+                    }
+                }
+            }
+        }
+        function checkLaserCollision(laser, monster) { //laser collision, returns boolean
+            let lazX = parseInt(laser.style.left.substring(0, laser.style.left.length))
+            let lazY = parseInt(laser.style.top.substring(0, laser.style.top.length)) + 3 //adding 3 gives approx center (its 5%, using ints can't divide by 2)
+            let monX = parseInt(monster.style.left.substring(0, monster.style.left.length)) + 2 //visual adjustment
+            let monY = parseInt(monster.style.top.substring(0, monster.style.top.length)) + 5 //aprox center
+            if (difference(lazX, monX) <= 2) {
+                if (difference(lazY, monY) <= 5) {
+                    return true
+                }
+            }
+            return false
+
+        }
+        function spawnBoss() {//it spawns the boss
+            let myBoss = createBossElement()
+            document.getElementById('container').appendChild(myBoss)
+            if (bossMovement == true) {
+                moveBoss()
+            }
+            updateHealth()
+            health.style.color = "red"
+            playBossMusic()
+        }
+        function createBossElement() { //x = level, gives different boss for each level
+            let newBoss = document.createElement('img')
+            newBoss.src = bossSRCs[0]
+            newBoss.style.height = '10%'
+            newBoss.style.width = 'auto'
+            newBoss.style.position = 'fixed'
+            newBoss.style.left = '80%'
+            newBoss.style.top = '45%'
+            newBoss.id = "BOSS"
+            return newBoss
+        }
+        function getBossHeight() { //return the height of the boss with no percent sign
+            if (bossSpawned == true) {
+                let mobBoss = document.getElementById("BOSS")
+                return parseInt(mobBoss.style.top.substring(0, mobBoss.style.top.length))
+            }
+            return 0
+        }
+        function moveBoss() {
+            let moveBossInterval = setInterval(myMoveBoss, 150)
+            var bossMoveUp = true //will flip between true and false to make oscillating motion
+            function myMoveBoss() {
+                let y = getBossHeight()
+                if (bossMoveUp == true) { //boss goes up the screen
+                    let aBoss = document.getElementById("BOSS")
+                    y = y - 1
+                    aBoss.style.top = y + '%'
+                    if (y <= 0) {
+                        bossMoveUp = false
+                    }
+                }
+                else { //boss goes down the screen
+                    let bBoss = document.getElementById("BOSS")
+                    y = y + 1
+                    bBoss.style.top = y + '%'
+                    if (y >= 90) {
+                        bossMoveUp = true
+                    }
+                }
+            }
+        }
+        function gameOver() {
+            //losing condition
+            myMonsters = [] //stops the movement of monsters, player-monster collision detection
+            playGameOverMusic()
+            setTimeout(restOfGameOver, 5000)
+            allowMonstertoMove = false
+            allowMonstersMade = false
+            allowLasersMove = false
+        }
+        function restOfGameOver(){
+            
+            if (currentLevel == 6) {
+                let oldHiscore = sessionStorage.getItem("hiscore")
+                if (score >= parseInt(oldHiscore)) {
+                    alert("Congratulations on your new hiscore!\nYou let the trash no whos talkin'!")
+                    let stringScore = "" + score
+                    sessionStorage.setItem("hiscore", stringScore)
+                }
+                else {
+                    alert("You may have not gotten your hiscore of " + oldHiscore + ", but you're still pretty good at clearing trash.")
+                }
+            }
+            else {
+                
+                alert("The trash may have won the battle, but not the war!\nTry again and remember to put the trash in the can!")
+
+            }
+            updateHiscores()
+
+            myRedirect("HTML3.html")
+
+        }
+        function updateHiscores() {
+            var lvl1HS = parseInt(sessionStorage.getItem("myScore1"))
+            var lvl2HS = parseInt(sessionStorage.getItem("myScore2"))
+            var lvl3HS = parseInt(sessionStorage.getItem("myScore3"))
+            var lvl4HS = parseInt(sessionStorage.getItem("myScore4"))
+            var lvl5HS = parseInt(sessionStorage.getItem("myScore5"))
+            var lvl6HS = parseInt(sessionStorage.getItem("myScore6"))
+            if (currentLevel == 1) {
+                if (score > lvl1HS) {
+                    var myScoreStr = score.toString()
+                    sessionStorage.setItem("myScore1", myScoreStr)
+                }
+            }
+            else if (currentLevel == 2) {
+                if (score > lvl2HS) {
+                    var myScoreStr = score.toString()
+                    sessionStorage.setItem("myScore2", myScoreStr)
+                }
+            }
+            else if (currentLevel == 3) {
+                if (score > lvl3HS) {
+                    var myScoreStr = score.toString()
+                    sessionStorage.setItem("myScore3", myScoreStr)
+                }
+            }
+            else if (currentLevel == 4) {
+                if (score > lvl4HS) {
+                    var myScoreStr = score.toString()
+                    sessionStorage.setItem("myScore4", myScoreStr)
+                }
+            }
+            else if (currentLevel == 5) {
+                if (score > lvl5HS) {
+                    var myScoreStr = score.toString()
+                    sessionStorage.setItem("myScore5", myScoreStr)
+                }
+            }
+            else if (currentLevel == 6) {
+                if (score > lvl6HS) {
+                    var myScoreStr = score.toString()
+                    sessionStorage.setItem("myScore6", myScoreStr)
+                }
+            }
+        }
+        function getReadyToWin() {
+            myMonsters = [] //stops the movement of monsters, player-monster collision detection
+            playGameWinMusic()
+            setTimeout(youWin, 5000)
+            allowMonstertoMove = false
+            allowMonstersMade = false
+            allowLasersMove = false
+            updateHiscores()
+        }
+        function youWin() { //called if boss health reaches zero
+            alert("Congratulations! You have defeated the trash!\nRemember to defeat the litter in real life too!\nYou've beaten level " + currentLevel + " and unlocked the boss!")
+            
+            if (currentLevel == 1) {
+                sessionStorage.setItem("level1cleared", "true")
+                sessionStorage.setItem("character2unlocked", "true")
+            }
+            else if (currentLevel == 2) {
+                sessionStorage.setItem("level2cleared", "true")
+                sessionStorage.setItem("character3unlocked", "true")
+            }
+            else if (currentLevel == 3) {
+                sessionStorage.setItem("level3cleared", "true")
+                sessionStorage.setItem("character4unlocked", "true")
+            }
+            else if (currentLevel == 4) {
+                sessionStorage.setItem("level4cleared", "true")
+                sessionStorage.setItem("character5unlocked", "true")
+            }
+            else if (currentLevel == 5) {
+                sessionStorage.setItem("level5cleared", "true")
+                sessionStorage.setItem("character6unlocked", "true")
+            }
+            myRedirect("HTML3.html")
+        }
+        function updateScore() {
+            scoreLabel.textContent = "Score: " + score
+        }
+        function updateHealth() {
+            health.textContent = "Boss Health: " + bossHealth + "/" + bossStartHealth
+            var healthPercent = (parseFloat(bossHealth)) / (parseFloat(bossStartHealth))
+            let boss = document.getElementById("BOSS")
+            if (healthPercent > 0.75) {
+                boss.src = bossSRCs[0]
+            }
+            else if (healthPercent <= 0.75 && healthPercent >= 0.50) {
+                boss.src = bossSRCs[1]
+            }
+            else if (healthPercent <= 0.50 && healthPercent >= 0.25) {
+                boss.src = bossSRCs[2]
+            }
+            else if (healthPercent <= 0.25 && healthPercent > 0.009) {//0.009 to avoid floating point
+                boss.src = bossSRCs[3]
+            }
+            else {
+                boss.src = bossSRCs[4]
+            }
+        }
+        function updateLevel() { //takes prototypical level and changes to desired level
+            let x = sessionStorage.getItem("playingLevel")
+            if (isNaN(x)) {
+                x = 1 //safety check
+            }
+            if (x === null) {
+                x = 1 //second safety check!
+            }
+            if (x == undefined) {
+                x = 1 //third for good measure
+            }
+            let a = document.getElementById("backG")
+            if (parseInt(x) == 1) {
+                //characteristics of level 1
+                currentLevel = 1
+                monstersMaxLevel = 1
+                monstersBeforeBoss = 10
+                bossHealth = 25
+                bossStartHealth = 25
+                angleMechs = false
+                bossMovement = false
+                bossSRCs = ['images/animals/Save_Starfish-1.png', 'images/animals/Save_Starfish-2.png', 'images/animals/Save_Starfish-3.png', 'images/animals/Save_Starfish-4.png', 'images/animals/Save_Starfish-5.png']
+                monsterSpeed = 100
+                monsterSpawnInterval = 5000
+            }
+            else if (parseInt(x) == 2) {
+                //characteristics of level 2
+                currentLevel = 2
+                monstersMaxLevel = 2
+                monstersBeforeBoss = 15
+                bossHealth = 30
+                bossStartHealth = 30
+                angleMechs = false
+                bossMovement = false
+                bossSRCs = ['images/animals/Jellyfish-1.png', 'images/animals/Jellyfish-2.png', 'images/animals/Jellyfish-3.png', 'images/animals/Jellyfish-4.png', 'images/animals/Jellyfish-5.png']
+                monsterSpeed = 90
+                monsterSpawnInterval = 4500
+                a.style.backgroundImage = "url('images/backgrounds/level2Background.png')"
+            }
+            else if (parseInt(x) == 3) {
+                //characteristics of level 3
+                currentLevel = 3
+                monstersMaxLevel = 3
+                monstersBeforeBoss = 20
+                bossHealth = 35
+                bossStartHealth = 35
+                angleMechs = false
+                bossMovement = false
+                bossSRCs = ['images/animals/Penguin-1.png', 'images/animals/Penguin-2.png', 'images/animals/Penguin-3.png', 'images/animals/Penguin-4.png', 'images/animals/Penguin-5.png']
+                monsterSpeed = 80
+                monsterSpawnInterval = 4000
+                a.style.backgroundImage = "url('images/backgrounds/level3Background.png')"
+            }
+            else if (parseInt(x) == 4) {
+                //characteristics of level 4
+                currentLevel = 4
+                monstersMaxLevel = 3
+                monstersBeforeBoss = 30
+                bossHealth = 45
+                bossStartHealth = 45
+                angleMechs = true
+                bossMovement = false
+                bossSRCs = ['images/animals/Anenome-1.png', 'images/animals/Anenome-2.png', 'images/animals/Anenome-4.png', 'images/animals/Anenome-5.png', 'images/animals/Anenome-6.png']
+                monsterSpeed = 70
+                monsterSpawnInterval = 3500
+                a.style.backgroundImage = "url('images/backgrounds/landscapeSelectScreen.png')"
+            }
+            else if (parseInt(x) == 5) {
+                //characteristics of level 5
+                currentLevel = 5
+                monstersMaxLevel = 3
+                monstersBeforeBoss = 45
+                bossHealth = 50
+                bossStartHealth = 50
+                angleMechs = true
+                bossMovement = true
+                bossSRCs = ['images/animals/Whale of a time-1.png','images/animals/Whale of a time-3.png', 'images/animals/Whale of a time-6.png', 'images/animals/Whale of a time-7.png', 'images/animals/Whale of a time-8.png']
+                monsterSpeed = 65
+                monsterSpawnInterval = 3000
+                a.style.backgroundImage = "url('images/backgrounds/level2Background.png')"
+            }
+            else {
+                currentLevel = 6 //special plans for this one
+                monstersMaxLevel = 3
+                monstersBeforeBoss = 9999999 //high number, won't be reached
+                angleMechs = true
+                a.style.backgroundImage = "url('images/backgrounds/level3Background.png')"
+
+            }
+        }
+        function updateCharacter() {
+            //updates the src for the character img
+            let x = parseInt(sessionStorage.getItem("characterSelected"))
+            if (x == 1) {
+                theCharacter.src = "images/animals/octopus-2.png"
+            } else if (x == 2) { theCharacter.src = "images/animals/Save_Starfish-5.png"
+            } else if (x == 3) { theCharacter.src = "images/animals/Jellyfish-5.png"
+            } else if (x == 4) { theCharacter.src = "images/animals/Penguin-5.png"
+            } else if (x == 5) { theCharacter.src = "images/animals/Anenome-6.png"
+            } else if (x == 6) { theCharacter.src = "images/animals/Whale%20of%20a%20time-8.png"}
+        }
+        //audio stoof
+        var musicLoadCount = 0
+        var easyMusic = null
+        var hardMusic = new Audio("audio/fast tempo 8 bit surf.mp3")
+        //easyMusic.preload = "auto"
+        //hardMusic.preload = "auto"
+        //easyMusic.onloadedmetadata = function () { musicLoadCount++ }
+        //hardMusic.onloadedmetadata = function () { musicLoadCount++ }
+        loadRightMusic()
+        function loadRightMusic() {
+            if (currentLevel >= 3) {
+                hardMusic = new Audio("audio/fast tempo 8 bit surf.mp3")
+                hardMusic.onloadedmetadata = function () { musicLoadCount++ }
+            } else {
+                easyMusic = new Audio("audio/normal speed 8 bit surf.mp3")
+                easyMusic.onloadedmetadata = function () { musicLoadCount++ }
+            }
+
+        }
+        function playMusic() {
+            if (currentLevel >= 3) {
+                hardMusic.addEventListener('ended', function () {
+                    this.currentTime = 0;
+                    this.play();
+                }, false);
+                hardMusic.play()
+            }
+            else {
+                easyMusic.addEventListener('ended', function () {
+                    this.currentTime = 0;
+                    this.play();
+                }, false);
+                easyMusic.play()
+            } 
+        }
+        const fireSound = new Audio("audio/fireSound.mp3")
+        //firesound.preload = "auto"
+        fireSound.onloadedmetadata = function () { musicLoadCount++ }
+        function playFireSound() {
+            fireSound.play()
+        }
+        const trash1sound = new Audio("audio/trashDefeat.mp3")
+        //trash1sound.preload = "auto"
+        trash1sound.onloadedmetadata = function () { musicLoadCount++ }
+        function playTrash1() { //the 3 of these are from zapsplat.com (requires credit I guess)
+            trash1sound.play()
+        }
+        const trash2sound = new Audio("audio/trashHit.mp3")
+        //trash2sound.preload = "auto"
+        trash2sound.onloadedmetadata = function () { musicLoadCount++ }
+        function playTrash2() {
+            trash2sound.play()
+        }
+        const bossMusic = new Audio("audio/Boss-Fight.mp3")
+        //bossMusic.preload = "auto"
+        bossMusic.onloadedmetadata = function () { musicLoadCount++ }
+        bossMusic.addEventListener('ended', function () {
+                this.currentTime = 0;
+                this.play();
+            }, false);
+        function playBossMusic() {
+            if (currentLevel >= 3) {
+                hardMusic.pause()
+            }
+            else {
+                easyMusic.pause()
+            }
+            
+            bossMusic.play()
+        }
+        const gameOverMusic = new Audio("audio/Game-Over.mp3")
+        //gameOverMusic.preload = "auto"
+        gameOverMusic.onloadedmetadata = function () { musicLoadCount++ }
+        gameOverMusic.addEventListener('ended', function () {
+                this.currentTime = 0;
+                this.play();
+            }, false);
+        function playGameOverMusic() {
+            if (bossSpawned == true) {
+                bossMusic.pause()
+            }
+            else if (currentLevel >= 3) {
+                hardMusic.pause()
+            }
+            else {
+                easyMusic.pause()
+            } 
+            gameOverMusic.play()
+        }
+        const gameWinMusic = new Audio("audio/Ship.mp3") //music by Patrick de Artega (credit him if we make a credits section, it's royalty and copyright free)
+        //gameWinMusic.preload = "auto"
+        gameWinMusic.onloadedmetadata = function () { musicLoadCount++ }
+        gameWinMusic.addEventListener('ended', function () {
+                this.currentTime = 0;
+                this.play();
+            }, false);
+        function playGameWinMusic() {
+            bossMusic.pause() 
+            gameWinMusic.play()
+        }
+        //call to the function to start the movement of the game
+        updateLevel()
+        updateCharacter()
+        health.style.color = 'transparent'
+        function startTheGame() {
+            if (musicLoadCount > 6) {
+                startButton.parentNode.removeChild(startButton)
+                startTheWave()
+                moveMonsters()
+                playMusic()
+            }
+        }
+        const loadingInterval = setInterval(loadCheck, 100)
+        startButton.textContent = "Loading..."
+        function loadCheck() {
+            if (musicLoadCount > 6) {
+                startButton.textContent = "Start!"
+            }
+        }
+        //another fuction for annimation (going back and forth between pngs)
+        if (currentLevel == 5) {
+            setTimeout(startTheWave, 300) //offset double spawns
+        }
+        if (currentLevel == 6) {
+            setTimeout(setInterval(startTheWave, 15000)) //increase spawns every 15 seconds
+        }
+
+        $(document).ready(function(){
+
+            $('.notSelectable').disableSelection();
+
+            });
+
+        $.fn.extend({
+        disableSelection: function() {
+        this.each(function() {
+            this.onselectstart = function() {
+                return false;
+            };
+            this.unselectable = "on";
+            $(this).css('-moz-user-select', 'none');
+            $(this).css('-webkit-user-select', 'none');
+        });
+            return this;
+         }
+        });
+    </script>
+</body>
+</html>

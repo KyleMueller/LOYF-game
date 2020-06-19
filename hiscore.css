@@ -1,0 +1,253 @@
+
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body, html {
+height: 100%;
+margin: 0;
+font-family: 'PixelOperatorRegular' !important;
+}
+
+.bg {
+  /* The image used */
+background-image: url("images/backgrounds/landscapeSelectScreenTrash.jpg");
+
+/* Full height */
+height: 125%; 
+/* Center and scale the image nicely */
+background-position: center center;
+background-repeat: no-repeat;
+background-size: cover;
+background-attachment: fixed;
+background-color: #57a5ff;
+}
+
+/*
+Button{
+  position: fixed;
+  font-size: 3.5vw;
+  padding:0px;
+  border-radius:0px;
+  margin:0px;
+  background-color: transparent;
+}
+*/
+
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-left: auto;
+}
+
+.row {
+	position: relative;
+	display: block;
+	width: 100%;
+	border-bottom: 1px solid #ffffff;
+}
+
+.name, .score {
+  font-size: 35px;
+  color: #ffffff;
+  position: relative;
+  display: inline-block;
+}
+
+.name {
+	width: 92%;
+	line-height: 45px;
+}
+
+.score {
+  width: 0%;
+}
+
+.title {
+  padding-top: 50px;
+  text-align: center;
+  width:400px;
+  height: auto;
+  margin-top: -10%;
+}
+
+/* Landscape iPhone x*/
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 812px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: landscape) { 
+
+    .row {
+      flex-wrap: unset;
+    }
+     .title {
+       color: white;
+       padding-top: 0%;
+       margin-bottom: 0%;
+       margin-top: -5%;
+       text-align: center;
+       width: 100%;
+       height: auto;
+       font-size: 45px;
+    }
+
+    .cancel {
+      padding: 0px;
+      margin-top: 1%;
+      margin-left: 4%;  
+    }
+
+    .name, .score {
+      font-size: 20px;
+    }
+  
+    
+}
+
+/* Portrait iPhone x*/
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 812px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: portrait) { 
+
+  .title {
+    font-size: 130px !important;
+    padding-left: 200px;
+    text-align: center;
+    width:400px;
+    height: auto;
+    font-size: 60px;
+    color: white;
+    margin-top: -13%;
+  }
+
+  .name, .score {
+    font-size: 85px;
+  }
+
+  .score {
+    width: 25%;
+  }
+
+  .name {
+    width: 75%;
+  }
+
+  .container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .bg {
+      background-image: url("images/backgrounds/portraitSelectScreenTrash.png");
+  }
+  
+  .cancel .btn-danger {
+     margin-top: -10%;
+    /*margin-left: 10%; */
+    font-size: 30px;
+  }
+  
+}
+
+/* Portrait iPhone 6, 7, 8*/
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 667px) 
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: portrait) {
+
+    .title {
+    font-size: 130px !important;
+    padding-left: 200px;
+    text-align: center;
+    width:400px;
+    height: auto;
+    font-size: 60px;
+    color: white;
+    margin-top: -13%;
+    }
+
+    .name, .score {
+      font-size: 85px;
+    }
+  
+    .score {
+      width: 25%;
+    }
+  
+    .name {
+      width: 75%;
+    }
+    
+    .bg {
+      background-image: url("images/backgrounds/portraitSelectScreenTrash.png");
+    }
+
+    .cancel .btn-danger {
+    margin-top: 4%;
+    margin-left: 8%;
+    font-size: 30px;
+   }
+
+}
+
+/* Landscape iPhone 6, 7, 8, 9*/
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 667px) 
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: landscape) { 
+
+    .title {
+      color: white;
+      padding-top: 0%;
+      margin-bottom: 0%;
+      margin-top: -5%;
+      text-align: center;
+      width: 100%;
+      height: auto;
+      font-size: 45px;
+   }
+
+   .cancel {
+    padding: 0px;
+    margin-top: 1%;
+    margin-left: 4%;  
+  }
+
+  .name, .score {
+    font-size: 20px;
+  }
+}
+
+/* ----------- Laptop Screens ----------- */
+@media screen 
+  and (min-device-width: 1200px) 
+  and (max-device-width: 5000px) {
+
+    .title {
+      width: 100%;
+      color: white;
+      font-size: 125px;
+    }
+
+    .cancel {
+      margin-left: 60px;
+      margin-top: 60px;
+    }
+
+    .cancel .btn-danger {
+      font-size: 40px;
+      padding-left: 50px;
+      padding-right: 50px;
+    }
+
+}

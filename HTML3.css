@@ -1,0 +1,297 @@
+html {
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body, html {
+height: 100%;
+margin: 0;
+font-family: 'PixelOperatorRegular' !important;
+}
+
+.bg {
+  /* The image used */
+background-image: url("images/backgrounds/landscapeSelectScreenTrash.jpg");
+
+/* Full height */
+height: 100%; 
+/* Center and scale the image nicely */
+background-position: center center;
+background-repeat: no-repeat;
+background-size: cover;
+background-attachment: fixed;
+background-color: #57a5ff;
+overflow: hidden;
+}
+
+/*
+Button{
+  position: fixed;
+  font-size: 3.5vw;
+  padding:0px;
+  border-radius:0px;
+  margin:0px;
+  background-color: transparent;
+}
+*/
+
+
+
+#container {
+  height: 100%;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.lvlSection {
+  padding-top: 0px;
+}
+
+
+.lvlBtn {
+  height: 100px;
+  background-size: 100%;
+  background-size: 40px auto;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* background-image: url(images/beachBG.jpg); */
+  background-color: rgba(255,255,255,0.3);
+  
+}
+
+.lvlImg {
+  height: 75%;
+  width: auto;
+}
+
+.lvlRow {
+  padding-bottom: 40px;
+}
+
+
+.select {
+  padding-top: 50px;
+  text-align: center;
+  width:400px;
+  height: auto;
+}
+
+
+/* Landscape iPhone x*/
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 812px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: landscape) { 
+
+    .row {
+      flex-wrap: unset;
+    }
+     .select {
+       color: white;
+       padding-top: 0%;
+       padding-right: 135px;
+       margin-bottom: 0%;
+       text-align: center;
+       width: 100%;
+       height: auto;
+       font-size: 65px;
+    }
+
+    .lvlSection {
+      padding: 0px;
+    }
+
+    .lvlRow {
+      padding-bottom: 10px;
+    }
+
+    .lvlBtn {
+      height: 80px;
+      margin: 0px !important;
+    }
+
+    .col-6 .lvlBtn{
+      width: 100%;
+      margin: 0%;
+    }
+
+    .cancel {
+      padding: 0px;
+      margin-top: 5%;
+      margin-left: 4%;  
+    }
+
+    .leaderboard .btn-success {
+      margin-top: 5%;
+      margin-right: 4%;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }.leaderboard .btn-success {
+      margin-top: 5%;
+      margin-right: 4%;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+    
+}
+
+/* Portrait iPhone x*/
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 812px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: portrait) { 
+
+  .select {
+      padding-top: 25px;
+      padding-left: 69px;
+      text-align: center;
+      width:400px;
+      height: auto;
+      font-size: 60px;
+      color: white;
+  }
+  
+  .bg {
+      background-image: url("images/backgrounds/portraitSelectScreenTrash.png");
+  }
+  
+  .cancel {
+    margin-top: 10%;
+    margin-left: 10%;
+  }
+
+  
+  .leaderboard .btn-success {
+    margin-top: 10%;
+    margin-right: 10%;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  
+}
+
+/* Portrait iPhone 6, 7, 8*/
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 667px) 
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: portrait) {
+
+    .select {
+      color: white;
+      padding-top: 0px;
+    }
+    
+    .bg {
+      background-image: url("images/backgrounds/portraitSelectScreenTrash.png");
+    }
+
+  .cancel {
+    margin-top: 10%;
+    margin-left: 10%;
+  }
+
+  .leaderboard .btn-success {
+    margin-top: 10%;
+    margin-right: 10%;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+}
+
+/* Landscape iPhone 6, 7, 8, 9*/
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 667px) 
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: landscape) { 
+
+    .lvlBtn {
+      height: 75px;
+      
+    }
+    
+    .lvlImg {
+      height: 100%;
+      width: auto;
+    }
+    
+    .lvlRow {
+      padding-bottom: 10px;
+    }
+
+    .cancel {
+      margin-top: 5%;
+      margin-left: 5%;
+    }
+
+    .select {
+      color: white;
+      margin-left: 68px;
+    }
+
+    .leaderboard .btn-success {
+      margin-top: 5%;
+      margin-right: 4%;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+}
+
+/* ----------- Laptop Screens ----------- */
+@media screen 
+  and (min-device-width: 1200px) 
+  and (max-device-width: 5000px) {
+
+    .select {
+      width: 100%;
+      color: white;
+      font-size: 125px;
+    }
+
+    .cancel {
+      margin-left: 60px;
+      margin-top: 60px;
+    }
+
+    .cancel .btn-danger {
+      font-size: 40px;
+      padding-left: 50px;
+      padding-right: 50px;
+    }
+
+
+    .lvlRow {
+      padding-bottom: 65px;
+    }
+
+    .lvlBtn {
+      height: 150px;
+    }
+
+    .leaderboard .btn-success {
+      font-size: 40px;
+      padding-left: 50px;
+      padding-right: 50px;
+      margin-top: 59px;
+      margin-right: 40px;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+}
